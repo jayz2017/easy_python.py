@@ -39,6 +39,6 @@ class eRadar():
         return radar_base_config(self)
     
     #设置带有阴影区域的雷达图
-    def radar_angle_radius_axis(self,baseParams):
+    def radar_angle_radius_axis(self,baseParams,max,min):
         self.opts.update(baseParams.opts)
-        return     round_radar_base_config(self)   
+        return     round_radar_base_config(self,max,min)   

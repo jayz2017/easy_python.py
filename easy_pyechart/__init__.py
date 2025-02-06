@@ -18,6 +18,11 @@ from plottable.plots import bar, percentile_bars, percentile_stars, progress_don
 from plottable.cmap import normed_cmap
 import matplotlib
 from pyecharts.globals import CurrentConfig
+import math
+import tempfile
+import filelock
+from pyecharts.globals import ThemeType
+
 CurrentConfig.ONLINE_HOST = "http://127.0.0.1:8000//"
 # 设置中文字体
 plt.rcParams['font.sans-serif'] = ['SimHei']  # 使用黑体
@@ -86,7 +91,10 @@ def _init_lengend(self):
         _initOpts = opts.InitOpts(
             bg_color={"type": "pattern", "image": JsCode("img"), "repeat": "no-repeat"})
     else:
-        _initOpts = opts.InitOpts(theme=self.opts['themeType'],bg_color='#ffffff')
+        _initOpts = opts.InitOpts(theme=ThemeType.DARK
+                                  #self.opts['themeType']
+                                  #,bg_color='#ffffff'
+                                  )
     c = (
         chart(init_opts=_initOpts)
     )
@@ -692,9 +700,14 @@ def radar_base_config(self):
     return c
 
 #带有阴影区域设置的雷达图的基本配置项，而且图例的样式时圆形，而不是六角型
-def round_radar_base_config(self):
+def round_radar_base_config(self,max,min):
     c = _init_lengend(self)
-    c.set_colors(["#4587E7"])
+    _v = abs(max)+abs(min)
+    interval = round(_v/4)
+    _color =['#5470c6','#91cc75','#fac858','#ee6666','#73c0de','#457385',"#4587E7",'#74a35e','#def0d6','#bbc6e8','#98a9dd']
+    # 随机选择一个颜色
+    random_color = random.choice(_color)
+    c.set_colors(['#000000'])
     c.add_schema(
         schema=self.opts['lableList'],
         shape="circle",
@@ -711,11 +724,13 @@ def round_radar_base_config(self):
             splitline_opts=opts.SplitLineOpts(is_show=False),
         ),
         radiusaxis_opts=opts.RadiusAxisOpts(
-            min_=-4,
-            max_=4,
-            interval=2,
+            min_=min,
+            max_=max,
+            interval=interval,
             splitarea_opts=opts.SplitAreaOpts(
-                is_show=True, areastyle_opts=opts.AreaStyleOpts(opacity=1,color='rgba(255, 255, 255, 0.5)'
+                is_show=True, areastyle_opts=opts.AreaStyleOpts(opacity=1,
+                                                                #color=random_color
+                                                                #'rgba(255, 255, 255, 0.5)'
                 )
             ),
         ),
@@ -726,25 +741,26 @@ def round_radar_base_config(self):
     c.add(
         series_name=self.opts['valueList'][0]['name'],
         data=self.opts['valueList'],
-        areastyle_opts=opts.AreaStyleOpts(opacity=0.8,color=JsCode(
-                    """ new echarts.graphic.RadialGradient(0.5, 0.5, 1, [
-                            {
-                                color: '#B8D3E4',
-                                offset: 0
-                            },
-                            {
-                                color: '#72ACD1',
-                                offset: 1
-                            }
-                        ])
-                        """
-                )
+        areastyle_opts=opts.AreaStyleOpts(opacity=0.8,color=random_color
+                #                           JsCode(
+                #     """ new echarts.graphic.RadialGradient(0.5, 0.5, 1, [
+                #             {
+                #                 color: '#B8D3E4',
+                #                 offset: 0
+                #             },
+                #             {
+                #                 color: '#72ACD1',
+                #                 offset: 1
+                #             }
+                #         ])
+                #         """
+                # )
                 ),
         linestyle_opts=opts.LineStyleOpts(width=1),
     )
     c.set_series_opts(label_opts=opts.LabelOpts(is_show=True))
     c.set_global_opts(
-        title_opts=opts.TitleOpts(title=self.opts['title'],subtitle=self.opts['subTitle']), legend_opts=opts.LegendOpts(pos_left='legft',pos_top='15%',orient="vertical")
+        title_opts=opts.TitleOpts(title=self.opts['title'],subtitle=self.opts['subTitle'],pos_left='20%',pos_top='10%'), legend_opts=opts.LegendOpts(pos_left='legft',pos_top='15%',orient="vertical")
     )
     return c
 
@@ -910,10 +926,27 @@ def _page_layout_base_config(self):
 
 #保存为图片
 def save_static_image(tagertLengend,tagertPath):
-    #try:
-        make_snapshot(snapshot, tagertLengend.render(), tagertPath,is_remove_html=True)
-    #int("保存图片失败")    
-        os.remove(tagertLengend.render())
+    temp_dir=r"C:\haochenkeji\sameTimeJpg"
+    # 创建临时文件，指定临时文件的存放目录
+    with tempfile.NamedTemporaryFile(delete=False, dir=temp_dir, suffix=".html") as tmp_file:
+        temp_path = tmp_file.name
+        # 渲染图表到临时文件
+        tagertLengend.render(temp_path)
+        # 使用文件锁确保删除操作的安全性
+        try:
+            # 生成静态图像
+            make_snapshot(snapshot, temp_path, tagertPath, is_remove_html=False)
+        except Exception as e:
+            print(f"保存图片失败: {e}")
+       # finally:
+            # 删除临时文件
+            #os.remove(temp_path)
+
+
+    # #try:
+    #     make_snapshot(snapshot, tagertLengend.render(), tagertPath,is_remove_html=True)
+    # #int("保存图片失败")    
+    #     os.remove(tagertLengend.render())
 
 def table_base_config(self,lineSplit):
     page_wight = self.opts["page_wight"]

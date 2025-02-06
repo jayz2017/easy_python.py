@@ -18,4 +18,4 @@ def test_graph():
             _links.append({"source": i.get('name'), "target": j.get('name')})
 
     easy_graph.eGraph(nodes=_nodes).excute_eGraph(baseParams(title='测试',subTitle="")).render("graph_base.html")
-test_graph()
+#test_graph()

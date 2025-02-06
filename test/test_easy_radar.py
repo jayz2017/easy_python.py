@@ -49,20 +49,30 @@ c_schema = [
     {"name": "市场", "max": 4, "min": -4},
 ]
 
-easy_radar.eRadar(lableList=c_schema,valueList=data).radar_air_quality(baseParams=baseParams(title='测试一下')).render("basic_radar_chart.html")
+#easy_radar.eRadar(lableList=c_schema,valueList=data).radar_air_quality(baseParams=baseParams(title='测试一下')).render("basic_radar_chart.html")
 
 
-data = [{"value": [4, 2, 2, 3, 0, 1], "name": "预算分配"}]
-c_schema = [
-    {"name": "销售", "max": 4, "min": -4},
-    {"name": "管理", "max": 4, "min": -4},
-    {"name": "技术", "max": 4, "min": -4},
-    {"name": "客服", "max": 4, "min": -4},
-    {"name": "研发", "max": 4, "min": -4},
-    {"name": "市场", "max": 4, "min": -4},
+data = [{"value": ["2", "1", "0.5", "0.3", "0", "2","1","3"], "name": ""}]
+# c_schema = [
+#     {"name": "销售", "max": 22, "min": -4},
+#     {"name": "管理", "max": 8, "min": -4},
+#     {"name": "技术", "max": 8, "min": -4},
+#     {"name": "客服", "max": 8, "min": -4},
+#     {"name": "研发", "max": 8, "min": -4},
+#     {"name": "市场", "max": 8, "min": -4},
+# ]
+c_schema =[
+  {"name":"得分","max":6,"min":-2},
+ {"name":"篮板","max":6,"min":-2},
+ {"name":"助攻","max":6,"min":-2},
+ {"name":"抢断盖帽","max":6,"min":-2},
+ {"name":"失误","max":6,"min":-2},
+ {"name":"效率","max":6,"min":-2},
+ {"name":"影响力","max":6,"min":-2},
+ {"name":"额外奖励","max":6,"min":-2}
 ]
 
-#easy_radar.eRadar(lableList=c_schema,valueList=data).radar_angle_radius_axis(baseParams=baseParams(title='测试一下')).render("basic_radar_chart.html")
+#easy_radar.eRadar(lableList=c_schema,valueList=data).radar_angle_radius_axis(baseParams=baseParams(title='测试一下'),max=6,min=-2).render("basic_radar_chart.html")
 
 
 

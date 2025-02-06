@@ -29,6 +29,11 @@ def packBaseParams(params):
         water_marking = params['waterMarking']
     except:
         water_marking = None
+    values['title'] = title
+    values['saveUrl'] = saveUrl
+    values['subTitle'] = subTitle
+    values['backgroundImageUrl'] = backgroundImageUrl
+    values['water_marking'] = water_marking
     return values
 
 def packParams(params):
@@ -353,26 +358,26 @@ def excute_easy_radar(type):
     _rParams = packBaseParams(_rDate)
     easyModel  = easy_radar.eRadar(_rDate['lableList'],_rDate['valueList'])
     if(type =='Base'):
-        easyModelLegend = easyModel.basic_radar_chart(baseParams(title=_rParams['title'] ,
-                                        subTitle= _rParams['subTitle'],
-                                         backgroundImageUrl= _rParams[' backgroundImageUrl']
+        easyModelLegend = easyModel.basic_radar_chart(baseParams(title=_rParams.get('title','') ,
+                                        subTitle= _rParams.get('subTitle',''),
+                                         backgroundImageUrl= _rParams.get('backgroundImageUrl',None)
                                         ))
     elif(type =='Single'):
-        easyModelLegend = easyModel.radar_selected_mode(baseParams(title=_rParams['title'] ,
-                                        subTitle= _rParams['subTitle'],
-                                         backgroundImageUrl= _rParams[' backgroundImageUrl']
+        easyModelLegend = easyModel.radar_selected_mode(baseParams(title=_rParams.get('title','') ,
+                                        subTitle= _rParams.get('subTitle',''),
+                                         backgroundImageUrl= _rParams.get('backgroundImageUrl',None)
                                         ))
     elif(type =='Air'):
-        easyModelLegend = easyModel.radar_air_quality(baseParams(title=_rParams['title'] ,
-                                        subTitle= _rParams['subTitle'],
-                                         backgroundImageUrl= _rParams[' backgroundImageUrl']
+        easyModelLegend = easyModel.radar_air_quality(baseParams(title=_rParams.get('title','') ,
+                                        subTitle= _rParams.get('subTitle',''),
+                                         backgroundImageUrl= _rParams.get('backgroundImageUrl',None)
                                         ))
     elif(type =='angle'):
-        easyModelLegend = easyModel.radar_angle_radius_axis(baseParams(title=_rParams['title'] ,
-                                        subTitle= _rParams['subTitle'],
-                                         backgroundImageUrl= _rParams[' backgroundImageUrl']
-                                        ))
-    easyModelLegendToSaveImage(_rParams['water_marking'],easyModelLegend,_rParams['saveUrl']) 
+        easyModelLegend = easyModel.radar_angle_radius_axis(baseParams(title=_rParams.get('title','') ,
+                                        subTitle= _rParams.get('subTitle',''),
+                                         backgroundImageUrl= _rParams.get('backgroundImageUrl',None)
+                                        ),max=_rDate.get('max',100),min=_rDate.get('min',-100))
+    easyModelLegendToSaveImage(_rParams.get('water_marking',None),easyModelLegend,_rParams['saveUrl']) 
     return {'sucessful':200}
 
 '''桑基图'''
