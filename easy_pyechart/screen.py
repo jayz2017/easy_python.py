@@ -14,7 +14,7 @@ def screen_png(file_location,save_path):
         ###########
     options = webdriver.ChromeOptions()
     options.add_argument('headless')
-    driver = webdriver.Chrome(executable_path="D:\\python3\\chromedriver.exe", chrome_options=options)
+    driver = webdriver.Chrome(executable_path="C:\\haochenkeji\\driver\\chromedriver.exe", chrome_options=options)
         # Your path to your chromedriver could be different than mine
         ###########
 
@@ -29,4 +29,4 @@ def screen_png(file_location,save_path):
     area.save(save_path)
 
 
-screen_png(r'D:\plg_resource\easy_pyechartpy\table_base.html',"customized_pie.png")
+#screen_png(r'D:\plg_resource\easy_pyechartpy\table_base.html',"customized_pie.png")

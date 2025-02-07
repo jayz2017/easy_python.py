@@ -8,8 +8,19 @@ a = Analysis(
     ['_main_.py'],
     pathex=['E:\\project\\easy_pyechartpy\\easy_pyechart'],
     binaries=[],
-    datas=[('D:\\python3\\Lib\\site-packages\\*.*', '.')],
-    hiddenimports=[],
+    datas=[('D:\\python_resources\\python\\pyecharts\\dist\\_main_\\pyecharts\datasets', 'pyecharts\\datasets')
+	,('D:\\python3\\Lib\\site-packages\\pyecharts\\charts', 'pyecharts\\charts')
+	,('D:\\python3\\Lib\\site-packages\\pyecharts\\render', 'pyecharts\\render')
+	,('D:\\python3\\Lib\\site-packages\\jinja2', 'jinja2')
+	,('E:\\project\\easy_pyechartpy\\assets', 'assets')
+	,('E:\\服务器资源配置\\chromedriver','.')
+	],
+   hiddenimports=[
+    'selenium',
+    'pandas',
+    'numpy',
+    # 其他需要的模块
+],
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],

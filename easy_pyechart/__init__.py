@@ -6,8 +6,10 @@ from pyecharts.options.series_options import Numeric
 from pyecharts.charts import Page
 import random
 from pyecharts.options import ComponentTitleOpts
-from pyecharts.render import make_snapshot
-from snapshot_phantomjs import snapshot
+# from pyecharts.render import make_snapshot
+# from snapshot_phantomjs import snapshot
+from pyecharts.render.snapshot import make_snapshot
+from snapshot_selenium import snapshot
 import os,gc
 from plottable import Table,ColumnDefinition
 import pandas as pd
@@ -22,8 +24,17 @@ import math
 import tempfile
 import filelock
 from pyecharts.globals import ThemeType
+import logging
 
-CurrentConfig.ONLINE_HOST = "http://127.0.0.1:8000//"
+#CurrentConfig.ONLINE_HOST = "http://127.0.0.1:8000//"
+# 获取当前脚本文件所在的目录
+current_directory = os.path.dirname(os.path.abspath(__file__))
+
+# 获取项目根目录
+project_root = os.path.dirname(current_directory)
+# 获取 assets 目录的路径
+assets_path = os.path.join(project_root, "assets//")
+CurrentConfig.ONLINE_HOST = assets_path
 # 设置中文字体
 plt.rcParams['font.sans-serif'] = ['SimHei']  # 使用黑体
 plt.rcParams['axes.unicode_minus'] = False  # 正常显示负号
@@ -91,7 +102,7 @@ def _init_lengend(self):
         _initOpts = opts.InitOpts(
             bg_color={"type": "pattern", "image": JsCode("img"), "repeat": "no-repeat"})
     else:
-        _initOpts = opts.InitOpts(theme=ThemeType.DARK
+        _initOpts = opts.InitOpts(theme=ThemeType.ROMA
                                   #self.opts['themeType']
                                   #,bg_color='#ffffff'
                                   )
@@ -925,6 +936,12 @@ def _page_layout_base_config(self):
 
 
 #保存为图片
+# 设置驱动程序路径
+#driver_path = r'C:\haochenkeji\driver'  # 根据实际情况修改路径
+# 在调用 make_snapshot 之前设置环境变量
+#os.environ['PATH'] += os.path.dirname(driver_path)
+#print(os.path.dirname(driver_path))
+#os.pathsep + os.path.dirname(driver_path)
 def save_static_image(tagertLengend,tagertPath):
     temp_dir=r"C:\haochenkeji\sameTimeJpg"
     # 创建临时文件，指定临时文件的存放目录
@@ -937,7 +954,7 @@ def save_static_image(tagertLengend,tagertPath):
             # 生成静态图像
             make_snapshot(snapshot, temp_path, tagertPath, is_remove_html=False)
         except Exception as e:
-            print(f"保存图片失败: {e}")
+            logging.error(f"保存图片失败: {e}", exc_info=True)
        # finally:
             # 删除临时文件
             #os.remove(temp_path)
